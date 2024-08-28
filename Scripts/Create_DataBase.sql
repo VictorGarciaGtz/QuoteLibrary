@@ -8,9 +8,9 @@ END
 USE QuoteLibrary;
 
 -- Create the Types table
-IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'Types') AND type in (N'U'))
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'TypesQuotes') AND type in (N'U'))
 BEGIN
-    CREATE TABLE Types (
+    CREATE TABLE TypesQuotes (
         Id INT IDENTITY(1,1),                -- Auto-increment primary key
         Name NVARCHAR(50) NOT NULL,         -- Name of the type (Movie, Series, etc.)
         CONSTRAINT PK_Types PRIMARY KEY (Id) -- Primary key constraint with name
@@ -53,9 +53,9 @@ BEGIN
 END
 
 -- Add foreign key constraint for TypeId in the Quotes table referencing the Types table
-IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'FK_Quotes_Types') AND parent_object_id = OBJECT_ID(N'Quotes'))
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'FK_Quotes_TypesQuotes') AND parent_object_id = OBJECT_ID(N'Quotes'))
 BEGIN
     ALTER TABLE Quotes
-    ADD CONSTRAINT FK_Quotes_Types FOREIGN KEY (TypeId) REFERENCES Types(Id)
+    ADD CONSTRAINT FK_Quotes_TypesQuotes FOREIGN KEY (TypeId) REFERENCES TypesQuotes(Id)
     ON DELETE SET NULL;  -- If a type is deleted, set TypeId in Quotes to NULL
 END

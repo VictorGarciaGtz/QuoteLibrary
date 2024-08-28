@@ -1,7 +1,9 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using QuoteLibrary.Application.Interfaces;
+using QuoteLibrary.Application.Services;
 using QuoteLibrary.Domain.Interfaces;
 using QuoteLibrary.Infrastructure.Data;
+using QuoteLibrary.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<DatabaseConfig>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<DatabaseConfig>>().Value);
 builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
+
+// Service
+builder.Services.AddScoped<ITypesQuotesService, TypesQuotesService>();
+
+// Repositories
+builder.Services.AddScoped<ITypesQuotesRepository, TypesQuotesRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

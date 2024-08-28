@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QuoteLibrary.Application.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,18 +9,29 @@ namespace QuoteLibrary.API.Controllers
     [ApiController]
     public class TypesController : ControllerBase
     {
-        // GET: api/<TypesController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly ITypesQuotesService _typesQuotesService;
+
+        public TypesController(ITypesQuotesService typesQuotesService)
         {
-            return new string[] { "value1", "value2" };
+            _typesQuotesService = typesQuotesService;
         }
 
-        // GET api/<TypesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Type>>> GetAllTypesQuotes()
         {
-            return "value";
+            var types = await _typesQuotesService.GetAllTypesQuotesAsync();
+            return Ok(types);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Type>> GetTypeQuotesById(int id)
+        {
+            var type = await _typesQuotesService.GetTypeQuotesByIdAsync(id);
+            if (type == null)
+            {
+                return NotFound();
+            }
+            return Ok(type);
         }
 
         // POST api/<TypesController>
