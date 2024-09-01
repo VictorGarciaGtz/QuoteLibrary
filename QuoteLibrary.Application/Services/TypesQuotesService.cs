@@ -1,12 +1,7 @@
 ﻿using QuoteLibrary.Application.Interfaces;
+using QuoteLibrary.Application.DTOs;
 using QuoteLibrary.Domain.Entities;
 using QuoteLibrary.Domain.Interfaces;
-using QuoteLibrary.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuoteLibrary.Application.Services
 {
@@ -19,14 +14,44 @@ namespace QuoteLibrary.Application.Services
             _typeRepository = typeRepository;
         }
 
-        public async Task<IEnumerable<TypesQuotes>> GetAllTypesQuotesAsync()
+        public async Task<IEnumerable<TypesQuotesDto>> GetAllTypesQuotesAsync()
         {
-            return await _typeRepository.GetAllTypesQuotesAsync();
+            var typesQuotes = await _typeRepository.GetAllTypesQuotesAsync();
+
+            return typesQuotes.Select(t => new TypesQuotesDto { Id = t.Id, Name = t.Name });
         }
 
-        public async Task<TypesQuotes?> GetTypeQuotesByIdAsync(int id)
+        public async Task<TypesQuotesDto?> GetTypesQuotesByIdAsync(int id)
         {
-            return await _typeRepository.GetTypeQuotesByIdAsync(id);
+            var typesQuotes = await _typeRepository.GetTypesQuotesByIdAsync(id);
+
+            return typesQuotes == null ? null : new TypesQuotesDto { Id = typesQuotes.Id, Name = typesQuotes.Name };
+        }
+
+        public async Task<int> CreateTypesQuotesAsync(string name)
+        {
+            var type = new TypesQuotes
+            {
+                Name = name
+            };
+            return await _typeRepository.CreateTypesQuotesAsync(type);
+        }
+
+        public async Task<bool> UpdateTypesQuotesAsync(int id, string name)
+        {
+            var existingType = await _typeRepository.GetTypesQuotesByIdAsync(id);
+            if (existingType == null)
+            {
+                return false;
+            }
+
+            existingType.Name = name;
+            return await _typeRepository.UpdateTypesQuotesAsync(existingType);
+        }
+
+        public async Task<bool> DeleteTypesQuotesAsync(int id)
+        {
+            return await _typeRepository.DeleteTypesQuotesAsync(id);
         }
     }
 }

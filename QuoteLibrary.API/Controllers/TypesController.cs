@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QuoteLibrary.Application.Interfaces;
+using QuoteLibrary.Application.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,39 +18,67 @@ namespace QuoteLibrary.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Type>>> GetAllTypesQuotes()
+        public async Task<ActionResult<IEnumerable<TypesQuotesDto>>> GetAllTypesQuotes()
         {
             var types = await _typesQuotesService.GetAllTypesQuotesAsync();
             return Ok(types);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Type>> GetTypeQuotesById(int id)
+        public async Task<ActionResult<TypesQuotesDto>> GetTypesQuotesById(int id)
         {
-            var type = await _typesQuotesService.GetTypeQuotesByIdAsync(id);
-            if (type == null)
+            var typeDto = await _typesQuotesService.GetTypesQuotesByIdAsync(id);
+            if (typeDto == null)
             {
                 return NotFound();
             }
-            return Ok(type);
+            return Ok(typeDto);
         }
 
-        // POST api/<TypesController>
+        // POST: api/Types
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<TypesQuotesDto>> CreateType([FromBody] TypesQuotesDto typesQuotesDto)
         {
+            if (string.IsNullOrWhiteSpace(typesQuotesDto.Name))
+            {
+                return BadRequest("Name is required.");
+            }
+
+            var id = await _typesQuotesService.CreateTypesQuotesAsync(typesQuotesDto.Name);
+            var createdTypeDto = await _typesQuotesService.GetTypesQuotesByIdAsync(id);
+
+            return CreatedAtAction(nameof(GetTypesQuotesById), new { id = createdTypeDto.Id }, createdTypeDto);
         }
 
-        // PUT api/<TypesController>/5
+        // PUT: api/Types/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> UpdateType(int id, [FromBody] TypesQuotesDto typesQuotesDto)
         {
+            if (string.IsNullOrWhiteSpace(typesQuotesDto.Name))
+            {
+                return BadRequest("Name is required.");
+            }
+
+            var result = await _typesQuotesService.UpdateTypesQuotesAsync(id, typesQuotesDto.Name);
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
 
-        // DELETE api/<TypesController>/5
+        // DELETE: api/Types/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteType(int id)
         {
+            var result = await _typesQuotesService.DeleteTypesQuotesAsync(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

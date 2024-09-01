@@ -10,6 +10,9 @@ namespace QuoteLibrary.Domain.Interfaces
     public interface ITypesQuotesRepository
     {
         Task<IEnumerable<TypesQuotes>> GetAllTypesQuotesAsync();
-        Task<TypesQuotes?> GetTypeQuotesByIdAsync(int id);
+        Task<TypesQuotes?> GetTypesQuotesByIdAsync(int id);
+        Task<int> CreateTypesQuotesAsync(TypesQuotes type);
+        Task<bool> UpdateTypesQuotesAsync(TypesQuotes type);
+        Task<bool> DeleteTypesQuotesAsync(int id);
     }
 }
