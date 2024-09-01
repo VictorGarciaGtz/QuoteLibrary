@@ -8,8 +8,7 @@ using QuoteLibrary.Infrastructure.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.Configure<DatabaseConfig>(builder.Configuration.GetSection("ConnectionStrings"));
-builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<DatabaseConfig>>().Value);
+
 builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
 
 // Service
