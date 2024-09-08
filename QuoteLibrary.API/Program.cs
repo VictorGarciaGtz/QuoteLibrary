@@ -13,9 +13,11 @@ builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
 
 // Service
 builder.Services.AddScoped<ITypesQuotesService, TypesQuotesService>();
+builder.Services.AddScoped<IAuthorsService, AuthorsService>();
 
 // Repositories
 builder.Services.AddScoped<ITypesQuotesRepository, TypesQuotesRepository>();
+builder.Services.AddScoped<IAuthorsRepository, AuthorsRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

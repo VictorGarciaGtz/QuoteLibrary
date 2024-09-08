@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace QuoteLibrary.Domain.Entities
 {
-    public class TypesQuotes
+    public class Authors
     {
-        public int Id { get; set; }
+        public int? Id {  get; set; }
         public required string Name { get; set; }
+        public DateTime BirthDate { get; set; }
+        public int IdNationality { get; set; }
+        public string? PhotoUrl { get; set; }
 
         public DateTime CreationDate { get; set; }
 

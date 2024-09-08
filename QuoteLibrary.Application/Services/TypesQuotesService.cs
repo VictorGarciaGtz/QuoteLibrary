@@ -18,14 +18,24 @@ namespace QuoteLibrary.Application.Services
         {
             var typesQuotes = await _typeRepository.GetAllTypesQuotesAsync();
 
-            return typesQuotes.Select(t => new TypesQuotesDto { Id = t.Id, Name = t.Name });
+            return typesQuotes.Select(t => new TypesQuotesDto { 
+                Id = t.Id, 
+                Name = t.Name,
+                CreationDate = t.CreationDate,
+                ModificationDate = t.ModificationDate
+            });
         }
 
         public async Task<TypesQuotesDto?> GetTypesQuotesByIdAsync(int id)
         {
             var typesQuotes = await _typeRepository.GetTypesQuotesByIdAsync(id);
 
-            return typesQuotes == null ? null : new TypesQuotesDto { Id = typesQuotes.Id, Name = typesQuotes.Name };
+            return typesQuotes == null ? null : new TypesQuotesDto { 
+                Id = typesQuotes.Id, 
+                Name = typesQuotes.Name, 
+                CreationDate = typesQuotes.CreationDate, 
+                ModificationDate = typesQuotes.ModificationDate 
+            };
         }
 
         public async Task<int> CreateTypesQuotesAsync(string name)

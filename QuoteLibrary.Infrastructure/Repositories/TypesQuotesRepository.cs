@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace QuoteLibrary.Infrastructure.Repositories
 {
@@ -23,11 +24,17 @@ namespace QuoteLibrary.Infrastructure.Repositories
             using (var connection = _connectionFactory.CreateConnection())
             {
                 string sql = @"
-                    INSERT INTO TypesQuotes (Name)
+                    INSERT INTO TypesQuotes (
+                        @pnName,    @pdCreationDate
+                    )
                     VALUES (@Name);
                     SELECT CAST(SCOPE_IDENTITY() as int);";
 
-                var id = await connection.QuerySingleAsync<int>(sql, type, commandType: System.Data.CommandType.Text, commandTimeout: 0);
+                var id = await connection.QuerySingleAsync<int>(sql, new
+                {
+                    @pnName = type.Name,
+                    @pdCreationDate = DateTime.Now,
+                }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
                 return id;
             }
         }
@@ -36,9 +43,9 @@ namespace QuoteLibrary.Infrastructure.Repositories
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
-                string sql = "DELETE FROM TypesQuotes WHERE Id = @Id;";
-                var rowsAffected = await connection.ExecuteAsync(sql, new { 
-                    Id = id 
+                string sql = "DELETE FROM TypesQuotes WHERE Id = @pnId;";
+                var rowsAffected = await connection.ExecuteAsync(sql, new {
+                    @pnId = id 
                 }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
                 return rowsAffected > 0;
             }
@@ -48,7 +55,7 @@ namespace QuoteLibrary.Infrastructure.Repositories
         {
             using(var connection = _connectionFactory.CreateConnection())
             {
-                string sql = "SELECT Id, Name FROM TypesQuotes";
+                string sql = "SELECT Id, Name, CreationDate, ModificationDate FROM TypesQuotes";
                 return await connection.QueryAsync<QuoteLibrary.Domain.Entities.TypesQuotes>(sql);
             }
         }
@@ -57,10 +64,10 @@ namespace QuoteLibrary.Infrastructure.Repositories
         {
             using(var connection = _connectionFactory.CreateConnection())
             {
-                string sql = "SELECT Id, Name FROM TypesQuotes WHERE Id = @id";
+                string sql = "SELECT Id, Name, CreationDate, ModificationDate FROM TypesQuotes WHERE Id = @pnId";
                 return await connection.QuerySingleOrDefaultAsync<QuoteLibrary.Domain.Entities.TypesQuotes>(sql, new
                 {
-                    @id = id
+                    @pnId = id
                 }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
             }
         }
@@ -71,10 +78,14 @@ namespace QuoteLibrary.Infrastructure.Repositories
             {
                 string sql = @"
                     UPDATE TypesQuotes
-                    SET Name = @Name
+                    SET Name = @pnName,
+                        ModificationDate = GETDATE()
                     WHERE Id = @Id;";
 
-                var rowsAffected = await connection.ExecuteAsync(sql, type, commandType: System.Data.CommandType.Text, commandTimeout: 0);
+                var rowsAffected = await connection.ExecuteAsync(sql, new
+                {
+                    @pnName = type.Name,
+                }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
                 return rowsAffected > 0;
             }
         }

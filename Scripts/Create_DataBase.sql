@@ -13,6 +13,8 @@ BEGIN
     CREATE TABLE TypesQuotes (
         Id INT IDENTITY(1,1),                -- Auto-increment primary key
         Name NVARCHAR(50) NOT NULL,         -- Name of the type (Movie, Series, etc.)
+		CreationDate SMALLDATETIME NOT NULL,      -- Date and time the TypesQuotes was created
+        ModificationDate SMALLDATETIME NULL,      -- Date and time the TypesQuotes was last modified
         CONSTRAINT PK_Types PRIMARY KEY (Id) -- Primary key constraint with name
     );
 END
@@ -24,8 +26,10 @@ BEGIN
         Id INT IDENTITY(1,1),               -- Auto-increment primary key
         Name NVARCHAR(100) NOT NULL,        -- Name of the author
         BirthDate DATE NULL,                -- Birthdate of the author (optional)
-        Nationality NVARCHAR(50) NULL,      -- Nationality of the author (optional)
+        IdNationality INT NULL,				-- Nationality of the author (optional)
         PhotoUrl NVARCHAR(255) NULL,        -- URL or path of the author's photo (optional)
+		CreationDate SMALLDATETIME NOT NULL,      -- Date and time the Authors was created
+        ModificationDate SMALLDATETIME NULL,      -- Date and time the Authors was last modified
         CONSTRAINT PK_Authors PRIMARY KEY (Id) -- Primary key constraint with name
     );
 END
@@ -38,8 +42,8 @@ BEGIN
         Text NVARCHAR(500) NOT NULL,         -- Field to store the quote
         AuthorId INT NULL,                   -- Foreign key to be added later
         TypeId INT NULL,                     -- Foreign key to be added later
-        CreationDate DATETIME NOT NULL,      -- Date and time the quote was created
-        ModificationDate DATETIME NULL,      -- Date and time the quote was last modified
+        CreationDate SMALLDATETIME NOT NULL,      -- Date and time the quote was created
+        ModificationDate SMALLDATETIME NULL,      -- Date and time the quote was last modified
         CONSTRAINT PK_Quotes PRIMARY KEY (Id) -- Primary key constraint with name
     );
 END
@@ -59,3 +63,4 @@ BEGIN
     ADD CONSTRAINT FK_Quotes_TypesQuotes FOREIGN KEY (TypeId) REFERENCES TypesQuotes(Id)
     ON DELETE SET NULL;  -- If a type is deleted, set TypeId in Quotes to NULL
 END
+
