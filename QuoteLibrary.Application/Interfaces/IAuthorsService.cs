@@ -8,7 +8,7 @@ namespace QuoteLibrary.Application.Interfaces
         Task<IEnumerable<AuthorsDto>> GetAllAuthorsAsync();
         Task<AuthorsDto?> GetAuthorsByIdAsync(int id);
         Task<int> CreateAuthorsAsync(AuthorsDto authorDto);
-        Task<bool> UpdateAuthorsAsync(AuthorsDto authorDto);
+        Task<bool> UpdateAuthorsAsync(int id, AuthorsDto authorDto);
         Task<bool> DeleteAuthorsAsync(int id);
     }
 }

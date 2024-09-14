@@ -9,7 +9,7 @@ namespace QuoteLibrary.Application.DTOs
         public int IdNationality { get; set; }
         public string? PhotoUrl { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime? CreationDate { get; set; }
 
         public DateTime? ModificationDate { get; set; }
     }

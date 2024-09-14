@@ -19,11 +19,11 @@ namespace QuoteLibrary.Infrastructure.Repositories
             {
                 string sql = @"
                     INSERT INTO Authors (
-                        Name,           BirthDate,       Nationality,       PhotoUrl,
+                        Name,           BirthDate,       IdNationality,       PhotoUrl,
                         CreationDate,   ModificationDate
                     )
                     VALUES (
-                        @pnName,        @pdBirthDate,    @psNationality,      @psPhotoUrl,
+                        @pnName,        @pdBirthDate,    @pnIdNationality,  @psPhotoUrl,
                         @pdCreationDate,NULL
                     );
                     SELECT CAST(SCOPE_IDENTITY() as int);";

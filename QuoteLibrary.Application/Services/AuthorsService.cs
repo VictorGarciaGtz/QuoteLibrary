@@ -22,7 +22,7 @@ namespace QuoteLibrary.Application.Services
                 BirthDate = authorDto.BirthDate,
                 IdNationality = authorDto.IdNationality,
                 PhotoUrl = authorDto.PhotoUrl,
-                CreationDate = authorDto.CreationDate
+                CreationDate = DateTime.Now
             };
 
             return await _authorsRepository.CreateAuthorsAsync(author);
@@ -39,6 +39,7 @@ namespace QuoteLibrary.Application.Services
             var authors = await _authorsRepository.GetAllAuthorsAsync();
 
             return authors.Select(x => new AuthorsDto { 
+                Id = x.Id,
                 Name = x.Name, 
                 BirthDate = x.BirthDate, 
                 IdNationality = x.IdNationality, 
@@ -52,6 +53,7 @@ namespace QuoteLibrary.Application.Services
         {
             var author = await _authorsRepository.GetAuthorsByIdAsync(id);
             return author == null ? null : new AuthorsDto { 
+                Id = author.Id,
                 Name = author.Name, 
                 BirthDate = author.BirthDate, 
                 CreationDate = author.CreationDate, 
@@ -60,7 +62,7 @@ namespace QuoteLibrary.Application.Services
             };
         }
 
-        public async Task<bool> UpdateAuthorsAsync(AuthorsDto authorDto)
+        public async Task<bool> UpdateAuthorsAsync(int id, AuthorsDto authorDto)
         {
             var author = await _authorsRepository.GetAuthorsByIdAsync(authorDto.Id ?? 0);
             if (author == null)
@@ -69,7 +71,7 @@ namespace QuoteLibrary.Application.Services
             }
             author.Name = authorDto.Name;
             author.BirthDate = authorDto.BirthDate;
-            author.CreationDate = authorDto.CreationDate;
+            author.CreationDate = DateTime.Now;
             author.PhotoUrl = authorDto.PhotoUrl;
             author.ModificationDate = authorDto.ModificationDate;
 

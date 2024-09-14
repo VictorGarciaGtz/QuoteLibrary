@@ -48,6 +48,16 @@ BEGIN
     );
 END
 
+-- Create the Nationalities table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'Nationalities') AND type in (N'U'))
+BEGIN
+    CREATE TABLE Nationalities (
+        Id INT IDENTITY(1,1),        -- Auto-increment primary key
+        Name NVARCHAR(100) NOT NULL, -- Nationality name
+        CONSTRAINT PK_Nationalities PRIMARY KEY (Id) -- Primary key constraint
+    );
+END
+
 -- Add foreign key constraint for AuthorId in the Quotes table referencing the Authors table
 IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'FK_Quotes_Authors') AND parent_object_id = OBJECT_ID(N'Quotes'))
 BEGIN
@@ -62,5 +72,13 @@ BEGIN
     ALTER TABLE Quotes
     ADD CONSTRAINT FK_Quotes_TypesQuotes FOREIGN KEY (TypeId) REFERENCES TypesQuotes(Id)
     ON DELETE SET NULL;  -- If a type is deleted, set TypeId in Quotes to NULL
+END
+
+-- Add the foreign key constraint to Authors table
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'FK_Authors_Nationalities') AND parent_object_id = OBJECT_ID(N'Authors'))
+BEGIN
+    ALTER TABLE Authors
+    ADD CONSTRAINT FK_Authors_Nationalities
+    FOREIGN KEY (IdNationality) REFERENCES Nationalities(Id);
 END
 
