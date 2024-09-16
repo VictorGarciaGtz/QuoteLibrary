@@ -25,15 +25,16 @@ namespace QuoteLibrary.Infrastructure.Repositories
             {
                 string sql = @"
                     INSERT INTO TypesQuotes (
-                        @pnName,    @pdCreationDate
+                        Name,    CreationDate
                     )
-                    VALUES (@Name);
+                    VALUES (
+                        @Name,   GETDATE(),
+                    );
                     SELECT CAST(SCOPE_IDENTITY() as int);";
 
                 var id = await connection.QuerySingleAsync<int>(sql, new
                 {
-                    @pnName = type.Name,
-                    @pdCreationDate = DateTime.Now,
+                    @pnName = type.Name
                 }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
                 return id;
             }

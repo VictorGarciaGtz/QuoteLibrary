@@ -24,7 +24,7 @@ namespace QuoteLibrary.Infrastructure.Repositories
                     )
                     VALUES (
                         @pnName,        @pdBirthDate,    @pnIdNationality,  @psPhotoUrl,
-                        @pdCreationDate,NULL
+                        GETDATE(),      NULL
                     );
                     SELECT CAST(SCOPE_IDENTITY() as int);";
 
@@ -33,8 +33,7 @@ namespace QuoteLibrary.Infrastructure.Repositories
                     @pnName = author.Name,
                     @pdBirthDate = author.BirthDate,
                     @pnIdNationality = author.IdNationality,
-                    @psPhotoUrl = author.PhotoUrl,
-                    @pdCreationDate = DateTime.Now
+                    @psPhotoUrl = author.PhotoUrl
                 }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
                 return id;
             }
