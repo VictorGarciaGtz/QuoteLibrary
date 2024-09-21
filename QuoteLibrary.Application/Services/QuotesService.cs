@@ -41,7 +41,8 @@ namespace QuoteLibrary.Application.Services
         {
             var quotes = await _quotesRepository.GetAllQuotesAsync();
 
-            return quotes.Select(x => new QuotesDto { 
+            return quotes.Select(x => new QuotesDto {
+                Id = x.Id,
                 Text = x.Text, 
                 AuthorId = x.AuthorId, 
                 TypeId = x.TypeId, 
@@ -64,7 +65,7 @@ namespace QuoteLibrary.Application.Services
             };
         }
 
-        public async Task<bool> UpdateQuotesAsync(QuotesDto quoteDto)
+        public async Task<bool> UpdateQuotesAsync(int id, QuotesDto quoteDto)
         {
             var quote = new Quotes
             {

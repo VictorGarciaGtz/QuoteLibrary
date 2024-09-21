@@ -28,7 +28,7 @@ namespace QuoteLibrary.Infrastructure.Repositories
                         Name,    CreationDate
                     )
                     VALUES (
-                        @Name,   GETDATE(),
+                        @pnName,   GETDATE()
                     );
                     SELECT CAST(SCOPE_IDENTITY() as int);";
 

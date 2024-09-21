@@ -64,7 +64,7 @@ namespace QuoteLibrary.Infrastructure.Repositories
 	                            AuthorId,
 	                            TypeId,
 	                            CreationDate,
-	                            ModificationDate,
+	                            ModificationDate
                             FROM Quotes";
             using (var connection = _connectionFactory.CreateConnection())
             {
@@ -84,7 +84,7 @@ namespace QuoteLibrary.Infrastructure.Repositories
 	                            AuthorId,
 	                            TypeId,
 	                            CreationDate,
-	                            ModificationDate,
+	                            ModificationDate
                             FROM Quotes
                             WHERE Id = @pnId";
             using (var connection = _connectionFactory.CreateConnection())
@@ -120,5 +120,5 @@ namespace QuoteLibrary.Infrastructure.Repositories
             }
         }
     }
-    }
 }
+

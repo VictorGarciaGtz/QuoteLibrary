@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.Interfaces;
+using QuoteLibrary.Application.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,67 @@ namespace QuoteLibrary.API.Controllers
     [ApiController]
     public class QuotesController : ControllerBase
     {
+        private readonly IQuotesService _quotesService;
+
+        public QuotesController(IQuotesService quotesService) {
+            _quotesService = quotesService;
+        }
+
         // GET: api/<QuoteLibraryController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<QuotesDto>>> GetAllQuotes()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(await _quotesService.GetAllQuotesAsync());
         }
 
         // GET api/<QuoteLibraryController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<QuotesDto>> GetById(int id)
         {
-            return "value";
+            var quoteDto = await _quotesService.GetQuotesByIdAsync(id);
+
+            if(quoteDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(quoteDto);
         }
 
         // POST api/<QuoteLibraryController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] QuotesDto quotesDto)
         {
+            var id = await _quotesService.CreateQuotesAsync(quotesDto);
+            var quote = await _quotesService.GetQuotesByIdAsync(id);
+
+            return CreatedAtAction(nameof(GetById), new { id = quote.Id }, quote);
         }
 
         // PUT api/<QuoteLibraryController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] QuotesDto quotesDto)
         {
+            var result = await _quotesService.UpdateQuotesAsync(id, quotesDto);
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
 
         // DELETE api/<QuoteLibraryController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var result = await _quotesService.DeleteQuotesAsync(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

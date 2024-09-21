@@ -13,7 +13,7 @@ namespace QuoteLibrary.Application.Interfaces
         Task<IEnumerable<QuotesDto>> GetAllQuotesAsync();
         Task<QuotesDto?> GetQuotesByIdAsync(int id);
         Task<int> CreateQuotesAsync(QuotesDto quoteDto);
-        Task<bool> UpdateQuotesAsync(QuotesDto quoteDto);
+        Task<bool> UpdateQuotesAsync(int id, QuotesDto quoteDto);
         Task<bool> DeleteQuotesAsync(int id);
     }
 }
