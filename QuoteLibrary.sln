@@ -5,11 +5,13 @@ VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuoteLibrary.API", "QuoteLibrary.Api\QuoteLibrary.API.csproj", "{6B04F8C1-52CD-4FE6-AAE0-734528C6C344}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoteLibrary.Application", "QuoteLibrary.Application\QuoteLibrary.Application.csproj", "{4114B338-C699-48C6-AB82-BD3BCA4E196B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuoteLibrary.Application", "QuoteLibrary.Application\QuoteLibrary.Application.csproj", "{4114B338-C699-48C6-AB82-BD3BCA4E196B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoteLibrary.Domain", "QuoteLibrary.Domain\QuoteLibrary.Domain.csproj", "{9A1E16F0-EEFF-4346-975F-5F2D8432AF09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuoteLibrary.Domain", "QuoteLibrary.Domain\QuoteLibrary.Domain.csproj", "{9A1E16F0-EEFF-4346-975F-5F2D8432AF09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoteLibrary.Infrastructure", "QuoteLibrary.Infrastructure\QuoteLibrary.Infrastructure.csproj", "{FB8341D8-0A5C-4A24-B269-6523F7517124}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuoteLibrary.Infrastructure", "QuoteLibrary.Infrastructure\QuoteLibrary.Infrastructure.csproj", "{FB8341D8-0A5C-4A24-B269-6523F7517124}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoteLibrary.Application.Tests", "QuoteLibrary.Application.Tests\QuoteLibrary.Application.Tests.csproj", "{81A57983-172D-4DD1-A29D-9FAC01E57422}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{FB8341D8-0A5C-4A24-B269-6523F7517124}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB8341D8-0A5C-4A24-B269-6523F7517124}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB8341D8-0A5C-4A24-B269-6523F7517124}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81A57983-172D-4DD1-A29D-9FAC01E57422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81A57983-172D-4DD1-A29D-9FAC01E57422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81A57983-172D-4DD1-A29D-9FAC01E57422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81A57983-172D-4DD1-A29D-9FAC01E57422}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
