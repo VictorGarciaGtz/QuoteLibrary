@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using QuoteLibrary.API.Middlewares;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
 using QuoteLibrary.Domain.Interfaces;
@@ -10,6 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
+
+//Middleware
+builder.Services.AddSingleton<ErrorHandlingMiddleware>();
 
 // Service
 builder.Services.AddScoped<ITypesQuotesService, TypesQuotesService>();
@@ -38,6 +42,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.MapControllers();
 
