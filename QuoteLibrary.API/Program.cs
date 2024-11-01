@@ -5,6 +5,7 @@ using QuoteLibrary.Application.Services;
 using QuoteLibrary.Domain.Interfaces;
 using QuoteLibrary.Infrastructure.Data;
 using QuoteLibrary.Infrastructure.Repositories;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,10 +26,18 @@ builder.Services.AddScoped<ITypesQuotesRepository, TypesQuotesRepository>();
 builder.Services.AddScoped<IAuthorsRepository, AuthorsRepository>();
 builder.Services.AddScoped<IQuotesRepository, QuotesRepository>();
 
+//Logger
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
