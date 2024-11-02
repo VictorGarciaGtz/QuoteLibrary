@@ -1,5 +1,7 @@
 -- Insert the 20 main nationalities into the Nationalities table with validation
-
+-- **************************************************************************************
+-- Nationalities
+-- **************************************************************************************
 IF NOT EXISTS (SELECT 1 FROM Nationalities WHERE Name = 'American')
 BEGIN
     INSERT INTO Nationalities (Name) VALUES ('American');

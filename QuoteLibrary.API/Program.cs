@@ -3,6 +3,7 @@ using QuoteLibrary.API.Middlewares;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
 using QuoteLibrary.Domain.Interfaces;
+using QuoteLibrary.Infrastructure.Authentication;
 using QuoteLibrary.Infrastructure.Data;
 using QuoteLibrary.Infrastructure.Repositories;
 using Serilog;
@@ -20,11 +21,17 @@ builder.Services.AddSingleton<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<ITypesQuotesService, TypesQuotesService>();
 builder.Services.AddScoped<IAuthorsService, AuthorsService>();
 builder.Services.AddScoped<IQuotesService, QuotesService>();
+builder.Services.AddScoped<IUserAppService, UserAppService>();
 
 // Repositories
 builder.Services.AddScoped<ITypesQuotesRepository, TypesQuotesRepository>();
 builder.Services.AddScoped<IAuthorsRepository, AuthorsRepository>();
 builder.Services.AddScoped<IQuotesRepository, QuotesRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+//JWT
+builder.Services.AddScoped<IJwtTokenService,JwtTokenService>();
+
 
 //Logger
 Log.Logger = new LoggerConfiguration()
