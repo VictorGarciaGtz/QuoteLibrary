@@ -21,13 +21,15 @@ builder.Services.AddSingleton<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<ITypesQuotesService, TypesQuotesService>();
 builder.Services.AddScoped<IAuthorsService, AuthorsService>();
 builder.Services.AddScoped<IQuotesService, QuotesService>();
-builder.Services.AddScoped<IUserAppService, UserAppService>();
+builder.Services.AddScoped<IAuthUserService, AuthUserService>();
+builder.Services.AddScoped<IUsersService, UsersService>();
 
 // Repositories
 builder.Services.AddScoped<ITypesQuotesRepository, TypesQuotesRepository>();
 builder.Services.AddScoped<IAuthorsRepository, AuthorsRepository>();
 builder.Services.AddScoped<IQuotesRepository, QuotesRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthUserRepository, AuthUserRepository>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 
 //JWT
 builder.Services.AddScoped<IJwtTokenService,JwtTokenService>();

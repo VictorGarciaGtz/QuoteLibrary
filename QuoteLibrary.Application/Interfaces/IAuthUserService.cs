@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace QuoteLibrary.Application.Interfaces
 {
-    public interface IUserAppService
+    public interface IAuthUserService
     {
-        Task<bool> RegisterUserAsync(string username, string password);
         Task<string> AuthenticateAsync(string username, string password);
     }
 }

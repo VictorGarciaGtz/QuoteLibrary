@@ -10,9 +10,9 @@ namespace QuoteLibrary.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IUserAppService _userAppService;
+        private readonly IAuthUserService _userAppService;
 
-        public AuthController(IUserAppService userAppService)
+        public AuthController(IAuthUserService userAppService)
         {
             _userAppService = userAppService;
         }

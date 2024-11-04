@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace QuoteLibrary.Domain.Interfaces
 {
-    public interface IUserService
+    public interface IAuthUserRepository
     {
-        Task<Users> ValidateUserAsync(string username, string password);
+        Task<Users?> ValidateUserAsync(string username, string password);
 
-        Task<bool> RegisterUserAsync(string username, string password);
     }
 }

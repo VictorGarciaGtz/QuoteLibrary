@@ -10,25 +10,20 @@ using System.Threading.Tasks;
 
 namespace QuoteLibrary.Application.Services
 {
-    public class UserAppService : IUserAppService
+    public class AuthUserService : IAuthUserService
     {
-        private readonly IUserService _userService;
+        private readonly IAuthUserRepository _authUserRepository;
         private readonly IJwtTokenService _jwtTokenService;
 
-        public UserAppService(IUserService userService, IJwtTokenService jwtTokenService)
+        public AuthUserService(IAuthUserRepository userService, IJwtTokenService jwtTokenService)
         {
-            _userService = userService;
+            _authUserRepository = userService;
             _jwtTokenService = jwtTokenService;
         }
-
-        public async Task<bool> RegisterUserAsync(string username, string password)
-        {
-            return await _userService.RegisterUserAsync(username, password);
-        }
-
+       
         public async Task<string> AuthenticateAsync(string username, string password)
         {
-            var user = await _userService.ValidateUserAsync(username, password);
+            var user = await _authUserRepository.ValidateUserAsync(username, password);
 
             if (user == null)
                 return null;
