@@ -13,7 +13,7 @@ namespace QuoteLibrary.Domain.Interfaces
 
         Task<bool> ExistUserWithUsernameOrEmail(string username, string email);
 
-        Task<Authors?> GetUsersByIdAsync(int id);
+        Task<Users?> GetUsersByIdAsync(int id);
         Task<int> CreateUsersAsync(Users user);
         Task<bool> UpdateUsersAsync(Users user);
         Task<bool> DeleteUsersAsync(int id);

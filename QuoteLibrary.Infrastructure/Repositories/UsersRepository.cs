@@ -23,9 +23,9 @@ namespace QuoteLibrary.Infrastructure.Repositories
             using (var connection = _connectionFactory.CreateConnection())
             {
                 string sql = @"INSERT INTO Users (
-                    Username, PasswordHash, RoleName, CreationDate, Email
+                    Username, PasswordHash, RoleName, CreationDate, Email, Active
                 ) VALUES (
-                    @psUsername, @psPasswordHash, @psRoleName, @pdCreationDate, @psEmail
+                    @psUsername, @psPasswordHash, @psRoleName, GETDATE(), @psEmail, 1
                 ) 
                 SELECT CAST(SCOPE_IDENTITY() as int);";
 
@@ -37,7 +37,6 @@ namespace QuoteLibrary.Infrastructure.Repositories
                     @psUsername = user.Username,
                     @psPasswordHash = passwordHash,
                     @psRoleName = "User",
-                    @pdCreationDate = DateTime.Now,
                     @psEmail = user.Email
                 }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
 
@@ -45,9 +44,19 @@ namespace QuoteLibrary.Infrastructure.Repositories
             }
         }
 
-        public Task<bool> DeleteUsersAsync(int id)
+        public async Task<bool> DeleteUsersAsync(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                string sql = @"UPDATE Users SET Active = 0, ModificationDate = GETDATE() WHERE Id = @pnId;";
+
+                var rowsAffected = await connection.ExecuteAsync(sql, new
+                {
+                    @pnId = id
+                }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
+
+                return rowsAffected > 0;
+            }
         }
 
         public async Task<bool> ExistUserWithUsernameOrEmail(string username, string email)
@@ -69,24 +78,56 @@ namespace QuoteLibrary.Infrastructure.Repositories
             }
         }
 
-        public Task<IEnumerable<Users>> GetAllUsersAsync()
+        public async Task<IEnumerable<Users>> GetAllUsersAsync()
         {
-            throw new NotImplementedException();
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                string sql = @"SELECT Id, Username, RoleName, CreationDate, ModificationDate, Email 
+                            FROM Users 
+                            WHERE RoleName = 'User'";
+
+                var users = await connection.QueryAsync<Users>(sql, new {
+                }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
+
+                return users;
+            }
         }
 
-        public Task<Authors?> GetUsersByIdAsync(int id)
+        public async Task<Users?> GetUsersByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                string sql = @"SELECT Id, Username, RoleName, CreationDate, ModificationDate, Email 
+                            FROM Users 
+                            WHERE RoleName = 'User' AND Id = @pnId";
+
+                var users = await connection.QueryFirstOrDefaultAsync<Users>(sql, new
+                {
+                    @pnId = id
+                }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
+
+                return users;
+            }
         }
 
-        public Task<bool> UpdateUsersAsync(Authors author)
+        public async Task<bool> UpdateUsersAsync(Users user)
         {
-            throw new NotImplementedException();
-        }
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                string sql = @"UPDATE Users SET Username = @psUsername, Email = @psEmail, ModificationDate = GETDATE(), PasswordHash = @psPasswordHash WHERE Id = @pnId;";
 
-        public Task<bool> UpdateUsersAsync(Users user)
-        {
-            throw new NotImplementedException();
+                var passwordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
+
+                var rowsAffected = await connection.ExecuteAsync(sql, new
+                {
+                    @pnId = user.Id,
+                    @psUsername = user.Username,
+                    @psEmail = user.Email,
+                    @psPasswordHash = passwordHash
+                }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
+
+                return rowsAffected > 0;
+            }
         }
     }
 }

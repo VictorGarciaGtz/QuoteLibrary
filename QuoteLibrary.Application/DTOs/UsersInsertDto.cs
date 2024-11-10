@@ -6,20 +6,14 @@ using System.Threading.Tasks;
 
 namespace QuoteLibrary.Application.DTOs
 {
-    public class UsersDto
+    public class UsersInsertDto
     {
         public int Id { get; set; }
-
         public required string Username { get; set; }
 
-        public required string RoleName { get; set; }
+        public required string PasswordHash { get; set; }
 
         public required string Email { get; set; }
-
-        public DateTime CreationDate { get; set; }
-
-        public DateTime? ModificationDate { get; set; }
-
 
     }
 }

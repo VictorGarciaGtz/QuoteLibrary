@@ -18,21 +18,65 @@ namespace QuoteLibrary.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UsersDto usersDto)
+        public async Task<IActionResult> CreateUser([FromBody] UsersInsertDto usersDto)
         {
             var id = await _usersService.CreateUserAsync(usersDto);
 
-            return Ok(id);
+            var userDto = _usersService.GetUsersByIdAsync(id);
+
+            return CreatedAtAction(nameof(GetUserById), new { id = userDto.Id }, userDto);
         }
 
         [HttpPost("validate")]
-        public async Task<ActionResult<bool>> ExistUserWithUsernameOrEmail([FromBody] UsersDto usersDto)
+        public async Task<ActionResult<bool>> ExistUserWithUsernameOrEmail([FromBody] UsersInsertDto usersDto)
         {
             var existUser = await _usersService.ExistUserWithUsernameOrEmail(usersDto);
 
             if(existUser) { return  Unauthorized(); }
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsers()
+        {
+            var users = await _usersService.GetAllUsersAsync();
+
+            return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UsersDto>> GetUserById(int id)
+        {
+            var userDto = await _usersService.GetUsersByIdAsync(id);
+
+            if (userDto == null) return NotFound();
+
+            return Ok(userDto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser([FromBody] UsersUpdateDto usersUpdateDto, int id)
+        {
+            var result = await _usersService.UpdateUsersAsync(id, usersUpdateDto);
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var result = await _usersService.DeleteUsersAsync(id);
+            if (!result)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }
