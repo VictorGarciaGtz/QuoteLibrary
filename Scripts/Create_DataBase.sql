@@ -58,6 +58,7 @@ BEGIN
         CreationDate DATETIME NOT NULL DEFAULT GETDATE(), -- Fecha de creación
         ModificationDate DATETIME NULL, -- Fecha de última actualización
 		Email NVARCHAR(200) NOT NULL UNIQUE,
+		Active BIT DEFAULT 1 NULL,
 		CONSTRAINT PK_Users PRIMARY KEY (Id) -- Primary key constraint
     );
 END
