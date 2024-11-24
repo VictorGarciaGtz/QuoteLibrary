@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using QuoteLibrary.Application.DTOs;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
@@ -19,6 +20,7 @@ namespace QuoteLibrary.API.Controllers
 
         // GET: api/<QuoteLibraryController>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<QuotesDto>>> GetAllQuotes()
         {
             return Ok(await _quotesService.GetAllQuotesAsync());
@@ -26,6 +28,7 @@ namespace QuoteLibrary.API.Controllers
 
         // GET api/<QuoteLibraryController>/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<QuotesDto>> GetById(int id)
         {
             var quoteDto = await _quotesService.GetQuotesByIdAsync(id);
@@ -40,6 +43,7 @@ namespace QuoteLibrary.API.Controllers
 
         // POST api/<QuoteLibraryController>
         [HttpPost]
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> Post([FromBody] QuotesDto quotesDto)
         {
             var id = await _quotesService.CreateQuotesAsync(quotesDto);
@@ -50,6 +54,7 @@ namespace QuoteLibrary.API.Controllers
 
         // PUT api/<QuoteLibraryController>/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> Put(int id, [FromBody] QuotesDto quotesDto)
         {
             var result = await _quotesService.UpdateQuotesAsync(id, quotesDto);
@@ -63,6 +68,7 @@ namespace QuoteLibrary.API.Controllers
 
         // DELETE api/<QuoteLibraryController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _quotesService.DeleteQuotesAsync(id);

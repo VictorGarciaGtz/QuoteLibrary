@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using QuoteLibrary.Application.DTOs;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Domain.Interfaces;
@@ -18,6 +19,7 @@ namespace QuoteLibrary.API.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] UserLoginDto userDto)
         {
             var token = await _userAppService.AuthenticateAsync(userDto.Username, userDto.Password);

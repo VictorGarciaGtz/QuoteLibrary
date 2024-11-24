@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,6 +9,7 @@ namespace QuoteLibrary.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin,User")]
     public class TypesController : ControllerBase
     {
         private readonly ITypesQuotesService _typesQuotesService;

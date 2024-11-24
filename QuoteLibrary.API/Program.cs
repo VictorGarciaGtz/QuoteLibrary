@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using QuoteLibrary.API.Middlewares;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
@@ -7,6 +9,7 @@ using QuoteLibrary.Infrastructure.Authentication;
 using QuoteLibrary.Infrastructure.Data;
 using QuoteLibrary.Infrastructure.Repositories;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,29 @@ builder.Services.AddSingleton<IDbConnectionFactory, DbConnectionFactory>();
 
 //Middleware
 builder.Services.AddSingleton<ErrorHandlingMiddleware>();
+
+var jwtKey = builder.Configuration["Jwt:SecretKey"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!))
+    };
+});
+
+builder.Services.AddAuthorization();
 
 // Service
 builder.Services.AddScoped<ITypesQuotesService, TypesQuotesService>();
@@ -59,6 +85,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();

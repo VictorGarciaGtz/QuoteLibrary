@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuoteLibrary.Application.DTOs;
 using QuoteLibrary.Application.Interfaces;
@@ -18,6 +19,7 @@ namespace QuoteLibrary.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateUser([FromBody] UsersInsertDto usersDto)
         {
             var id = await _usersService.CreateUserAsync(usersDto);
@@ -28,6 +30,7 @@ namespace QuoteLibrary.API.Controllers
         }
 
         [HttpPost("validate")]
+        [AllowAnonymous]
         public async Task<ActionResult<bool>> ExistUserWithUsernameOrEmail([FromBody] UsersInsertDto usersDto)
         {
             var existUser = await _usersService.ExistUserWithUsernameOrEmail(usersDto);
@@ -38,6 +41,7 @@ namespace QuoteLibrary.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsers()
         {
             var users = await _usersService.GetAllUsersAsync();
@@ -46,6 +50,7 @@ namespace QuoteLibrary.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult<UsersDto>> GetUserById(int id)
         {
             var userDto = await _usersService.GetUsersByIdAsync(id);
@@ -56,6 +61,7 @@ namespace QuoteLibrary.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> UpdateUser([FromBody] UsersUpdateDto usersUpdateDto, int id)
         {
             var result = await _usersService.UpdateUsersAsync(id, usersUpdateDto);
@@ -68,6 +74,7 @@ namespace QuoteLibrary.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var result = await _usersService.DeleteUsersAsync(id);
