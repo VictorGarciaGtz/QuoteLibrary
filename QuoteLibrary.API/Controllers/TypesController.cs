@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace QuoteLibrary.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Roles = "Admin,User")]
     public class TypesController : ControllerBase

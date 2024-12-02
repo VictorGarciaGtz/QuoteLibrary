@@ -76,19 +76,18 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseHttpsRedirection();
+app.UseMiddleware<ApiVersioningMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.MapControllers();
 

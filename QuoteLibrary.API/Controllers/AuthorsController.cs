@@ -7,7 +7,7 @@ using QuoteLibrary.Application.Interfaces;
 
 namespace QuoteLibrary.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Roles = "Admin,User")]
     public class AuthorsController : ControllerBase
