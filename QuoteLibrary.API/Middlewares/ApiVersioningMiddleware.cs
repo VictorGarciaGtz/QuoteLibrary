@@ -14,11 +14,11 @@
             // Extraer la versión de los encabezados o query string
             if (httpContext.Request.Headers.TryGetValue("x-api-version", out var versionHeader))
             {
-                httpContext.Request.Path = $"/api/v{versionHeader}{httpContext.Request.Path}";
+                httpContext.Request.Path = $"/api/v{versionHeader}{httpContext.Request.Path.ToString().Replace("/api", "")}";
             }
             else if (httpContext.Request.Query.TryGetValue("api-version", out var versionQuery))
             {
-                httpContext.Request.Path = $"/api/v{versionQuery}{httpContext.Request.Path}";
+                httpContext.Request.Path = $"/api/v{versionQuery}{httpContext.Request.Path.ToString().Replace("/api", "")}";
             }
 
             await _next(httpContext);
