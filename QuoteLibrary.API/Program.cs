@@ -44,6 +44,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 // Service
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITypesQuotesService, TypesQuotesService>();
 builder.Services.AddScoped<IAuthorsService, AuthorsService>();
 builder.Services.AddScoped<IQuotesService, QuotesService>();

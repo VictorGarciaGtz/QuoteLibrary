@@ -1,17 +1,21 @@
-﻿using QuoteLibrary.Application.DTOs;
+﻿using Microsoft.AspNetCore.Http;
+using QuoteLibrary.Application.DTOs;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Domain.Entities;
 using QuoteLibrary.Domain.Interfaces;
+using System.Security.Claims;
 
 namespace QuoteLibrary.Application.Services
 {
     public class UsersService : IUsersService
     {
         private readonly IUsersRepository _usersRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UsersService(IUsersRepository usersRepository) 
-        { 
+        public UsersService(IUsersRepository usersRepository, IHttpContextAccessor httpContextAccessor) 
+        {
             _usersRepository = usersRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<int> CreateUserAsync(UsersInsertDto usersDto)
@@ -36,6 +40,9 @@ namespace QuoteLibrary.Application.Services
 
         public async Task<bool> DeleteUsersAsync(int id)
         {
+            if (!IsValidClaimsUserByRole(id))
+                throw new Exception(string.Format("This user is not authorized to perform this action to the element with Id {0}.", id));
+
             return await _usersRepository.DeleteUsersAsync(id);
         }
 
@@ -60,6 +67,9 @@ namespace QuoteLibrary.Application.Services
 
         public async Task<UsersDto?> GetUsersByIdAsync(int id)
         {
+            if (!IsValidClaimsUserByRole(id))
+                throw new Exception(string.Format("This user is not authorized to perform this action to the element with Id {0}.", id));
+
             var user = await _usersRepository.GetUsersByIdAsync(id);
 
             if (user == null) return null;
@@ -78,6 +88,9 @@ namespace QuoteLibrary.Application.Services
 
         public async Task<bool> UpdateUsersAsync(int id, UsersUpdateDto userDto)
         {
+            if (!IsValidClaimsUserByRole(id))
+                throw new Exception(string.Format("This user is not authorized to perform this action to the element with Id {0}.", id));
+
             var existUser = _usersRepository.GetUsersByIdAsync(id);
 
             if(existUser == null) return false;
@@ -99,5 +112,34 @@ namespace QuoteLibrary.Application.Services
 
             return await _usersRepository.UpdateUsersAsync(user);
         }
-    }
+
+        private bool IsValidClaimsUserByRole(int id)
+        {
+            var authenticatedUserId = GetAuthenticatedUserId();
+
+            var userId = 0;
+
+            if (!int.TryParse(authenticatedUserId, out userId))
+                return false;
+
+            var userRole = GetAuthenticatedUserRole();
+
+            if (userRole == "User" & id != userId)
+                return false;
+
+            return true;
+        }
+
+        private string GetAuthenticatedUserId()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return userId ?? string.Empty;
+        }
+
+        private string GetAuthenticatedUserRole()
+        {
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value;
+            return userId ?? string.Empty;
+        }
+    }  
 }

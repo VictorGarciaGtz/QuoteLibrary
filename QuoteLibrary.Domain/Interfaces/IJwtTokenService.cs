@@ -8,7 +8,7 @@ namespace QuoteLibrary.Domain.Interfaces
 {
     public interface IJwtTokenService
     {
-        string GenerateJwtToken(string username, string role);
+        string GenerateJwtToken(string username, string role, int id);
 
     }
 }

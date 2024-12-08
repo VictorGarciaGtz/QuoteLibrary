@@ -28,7 +28,7 @@ namespace QuoteLibrary.Application.Services
             if (user == null)
                 return null;
 
-            return _jwtTokenService.GenerateJwtToken(username, user.RoleName);
+            return _jwtTokenService.GenerateJwtToken(username, user.RoleName, user.Id);
         }
     }
 }

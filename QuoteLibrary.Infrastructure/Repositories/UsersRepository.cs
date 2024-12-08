@@ -99,7 +99,7 @@ namespace QuoteLibrary.Infrastructure.Repositories
             {
                 string sql = @"SELECT Id, Username, RoleName, CreationDate, ModificationDate, Email 
                             FROM Users 
-                            WHERE RoleName = 'User' AND Id = @pnId";
+                            WHERE Id = @pnId";
 
                 var users = await connection.QueryFirstOrDefaultAsync<Users>(sql, new
                 {

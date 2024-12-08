@@ -22,11 +22,11 @@ namespace QuoteLibrary.Infrastructure.Authentication
             _configuration = configuration;
         }
 
-        public string GenerateJwtToken(string username, string role)
+        public string GenerateJwtToken(string username, string role, int id)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(JwtRegisteredClaimNames.Sub, id.ToString()),
                 new Claim(ClaimTypes.Role, role),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
