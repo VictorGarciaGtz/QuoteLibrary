@@ -14,5 +14,7 @@ namespace QuoteLibrary.Domain.Entities
         public DateTime CreationDate { get; set; }
 
         public DateTime? ModificationDate { get; set; }
+
+        public int UserId { get; set; }
     }
 }

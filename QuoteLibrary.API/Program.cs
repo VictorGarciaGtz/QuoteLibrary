@@ -50,6 +50,7 @@ builder.Services.AddScoped<IAuthorsService, AuthorsService>();
 builder.Services.AddScoped<IQuotesService, QuotesService>();
 builder.Services.AddScoped<IAuthUserService, AuthUserService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Repositories
 builder.Services.AddScoped<ITypesQuotesRepository, TypesQuotesRepository>();

@@ -8,10 +8,12 @@ namespace QuoteLibrary.Application.Services
     public class TypesQuotesService : ITypesQuotesService
     {
         private readonly ITypesQuotesRepository _typeRepository;
+        private readonly ITokenService _tokenService;
 
-        public TypesQuotesService(ITypesQuotesRepository typeRepository)
+        public TypesQuotesService(ITypesQuotesRepository typeRepository, ITokenService tokenService)
         {
             _typeRepository = typeRepository;
+            _tokenService = tokenService;
         }
 
         public async Task<IEnumerable<TypesQuotesDto>> GetAllTypesQuotesAsync()
@@ -40,9 +42,11 @@ namespace QuoteLibrary.Application.Services
 
         public async Task<int> CreateTypesQuotesAsync(string name)
         {
+            var userId = _tokenService.GetUserId();
             var type = new TypesQuotes
             {
-                Name = name
+                Name = name,
+                UserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId)    
             };
             return await _typeRepository.CreateTypesQuotesAsync(type);
         }

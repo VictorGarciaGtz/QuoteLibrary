@@ -10,12 +10,12 @@ namespace QuoteLibrary.Application.Services
     public class UsersService : IUsersService
     {
         private readonly IUsersRepository _usersRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ITokenService _tokenService;
 
-        public UsersService(IUsersRepository usersRepository, IHttpContextAccessor httpContextAccessor) 
+        public UsersService(IUsersRepository usersRepository, ITokenService tokenService) 
         {
             _usersRepository = usersRepository;
-            _httpContextAccessor = httpContextAccessor;
+            _tokenService = tokenService;
         }
 
         public async Task<int> CreateUserAsync(UsersInsertDto usersDto)
@@ -115,31 +115,19 @@ namespace QuoteLibrary.Application.Services
 
         private bool IsValidClaimsUserByRole(int id)
         {
-            var authenticatedUserId = GetAuthenticatedUserId();
+            var authenticatedUserId = _tokenService.GetUserId();
 
             var userId = 0;
 
             if (!int.TryParse(authenticatedUserId, out userId))
                 return false;
 
-            var userRole = GetAuthenticatedUserRole();
+            var userRole = _tokenService.GetUserRole();
 
             if (userRole == "User" & id != userId)
                 return false;
 
             return true;
-        }
-
-        private string GetAuthenticatedUserId()
-        {
-            var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return userId ?? string.Empty;
-        }
-
-        private string GetAuthenticatedUserRole()
-        {
-            var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value;
-            return userId ?? string.Empty;
         }
     }  
 }
