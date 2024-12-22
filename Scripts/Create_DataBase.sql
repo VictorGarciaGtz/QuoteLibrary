@@ -4,6 +4,8 @@ BEGIN
     CREATE DATABASE QuoteLibrary;
 END
 
+WAITFOR DELAY '00:00:02';
+
 -- Switch to the QuoteLibrary database
 USE QuoteLibrary;
 
@@ -15,6 +17,7 @@ BEGIN
         Name NVARCHAR(50) NOT NULL,         -- Name of the type (Movie, Series, etc.)
 		CreationDate SMALLDATETIME NOT NULL,      -- Date and time the TypesQuotes was created
         ModificationDate SMALLDATETIME NULL,      -- Date and time the TypesQuotes was last modified
+		UserId			INT NOT NULL,
         CONSTRAINT PK_Types PRIMARY KEY (Id) -- Primary key constraint with name
     );
 END
@@ -30,6 +33,7 @@ BEGIN
         PhotoUrl NVARCHAR(255) NULL,        -- URL or path of the author's photo (optional)
 		CreationDate SMALLDATETIME NOT NULL,      -- Date and time the Authors was created
         ModificationDate SMALLDATETIME NULL,      -- Date and time the Authors was last modified
+		UserId			INT NOT NULL,
         CONSTRAINT PK_Authors PRIMARY KEY (Id) -- Primary key constraint with name
     );
 END
@@ -41,9 +45,10 @@ BEGIN
         Id INT IDENTITY(1,1),                -- Auto-increment primary key
         Text NVARCHAR(500) NOT NULL,         -- Field to store the quote
         AuthorId INT NULL,                   -- Foreign key to be added later
-        TypeId INT NULL,                     -- Foreign key to be added later
+        TypeId INT NOT NULL,                     -- Foreign key to be added later
         CreationDate SMALLDATETIME NOT NULL,      -- Date and time the quote was created
         ModificationDate SMALLDATETIME NULL,      -- Date and time the quote was last modified
+		UserId			INT NOT NULL,
         CONSTRAINT PK_Quotes PRIMARY KEY (Id) -- Primary key constraint with name
     );
 END
@@ -78,7 +83,7 @@ IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'FK_Q
 BEGIN
     ALTER TABLE Quotes
     ADD CONSTRAINT FK_Quotes_Authors FOREIGN KEY (AuthorId) REFERENCES Authors(Id)
-    ON DELETE SET NULL;  -- If an author is deleted, set AuthorId in Quotes to NULL
+    --ON DELETE SET NULL;  -- If an author is deleted, set AuthorId in Quotes to NULL
 END
 
 -- Add foreign key constraint for TypeId in the Quotes table referencing the Types table
@@ -86,7 +91,7 @@ IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'FK_Q
 BEGIN
     ALTER TABLE Quotes
     ADD CONSTRAINT FK_Quotes_TypesQuotes FOREIGN KEY (TypeId) REFERENCES TypesQuotes(Id)
-    ON DELETE SET NULL;  -- If a type is deleted, set TypeId in Quotes to NULL
+    --ON DELETE SET NULL;  -- If a type is deleted, set TypeId in Quotes to NULL
 END
 
 -- Add the foreign key constraint to Authors table
@@ -97,3 +102,23 @@ BEGIN
     FOREIGN KEY (IdNationality) REFERENCES Nationalities(Id);
 END
 
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'FK_TypesQuotes_Users') AND parent_object_id = OBJECT_ID(N'TypesQuotes'))
+BEGIN
+    ALTER TABLE TypesQuotes
+    ADD CONSTRAINT FK_TypesQuotes_Users FOREIGN KEY (UserId) REFERENCES Users(Id)
+    --ON DELETE SET NULL;  -- If an author is deleted, set AuthorId in Quotes to NULL
+END
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'FK_Authors_Users') AND parent_object_id = OBJECT_ID(N'Authors'))
+BEGIN
+    ALTER TABLE Authors
+    ADD CONSTRAINT FK_Authors_Users FOREIGN KEY (UserId) REFERENCES Users(Id)
+    --ON DELETE SET NULL;  -- If an author is deleted, set AuthorId in Quotes to NULL
+END
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'FK_Quotes_Users') AND parent_object_id = OBJECT_ID(N'Quotes'))
+BEGIN
+    ALTER TABLE Quotes
+    ADD CONSTRAINT FK_Quotes_Users FOREIGN KEY (UserId) REFERENCES Users(Id)
+    --ON DELETE SET NULL;  -- If an author is deleted, set AuthorId in Quotes to NULL
+END
