@@ -25,10 +25,10 @@ namespace QuoteLibrary.Infrastructure.Repositories
                 string sql = @"
                     INSERT INTO Quotes(
 	                    Text,				AuthorId,		TypeId,
-	                    CreationDate
+	                    CreationDate,       UserId
                     ) VALUES (
 	                    @psText,			@pnAuthorId,	@pnTypeId,
-	                    GETDATE()
+	                    GETDATE(),          @pnUserId
                     )
                     SELECT CAST(SCOPE_IDENTITY() as int);";
 
@@ -36,7 +36,8 @@ namespace QuoteLibrary.Infrastructure.Repositories
                 {
                     @psText = quote.Text,
                     @pnAuthorId = quote.AuthorId,
-                    @pnTypeId = quote.TypeId
+                    @pnTypeId = quote.TypeId,
+                    @pnUserId = quote.UserId
                 }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
                 return id;
             }

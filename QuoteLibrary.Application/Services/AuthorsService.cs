@@ -8,21 +8,25 @@ namespace QuoteLibrary.Application.Services
     public class AuthorsService : IAuthorsService
     {
         private readonly IAuthorsRepository _authorsRepository;
+        private readonly ITokenService _tokenService;
 
-        public AuthorsService(IAuthorsRepository authorsRepository)
+        public AuthorsService(IAuthorsRepository authorsRepository, ITokenService tokenService)
         {
             _authorsRepository = authorsRepository;
+            _tokenService = tokenService;
         }
 
         public async Task<int> CreateAuthorsAsync(AuthorsDto authorDto)
         {
+            var userId = _tokenService.GetUserId();
             var author = new Authors
             {
                 Name = authorDto.Name,
                 BirthDate = authorDto.BirthDate,
                 IdNationality = authorDto.IdNationality,
                 PhotoUrl = authorDto.PhotoUrl,
-                CreationDate = DateTime.Now
+                CreationDate = DateTime.Now,
+                UserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId),
             };
 
             return await _authorsRepository.CreateAuthorsAsync(author);

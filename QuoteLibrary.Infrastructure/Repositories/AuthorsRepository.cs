@@ -20,11 +20,11 @@ namespace QuoteLibrary.Infrastructure.Repositories
                 string sql = @"
                     INSERT INTO Authors (
                         Name,           BirthDate,       IdNationality,       PhotoUrl,
-                        CreationDate,   ModificationDate
+                        CreationDate,   ModificationDate,UserId
                     )
                     VALUES (
                         @pnName,        @pdBirthDate,    @pnIdNationality,  @psPhotoUrl,
-                        GETDATE(),      NULL
+                        GETDATE(),      NULL,           @pnUserId
                     );
                     SELECT CAST(SCOPE_IDENTITY() as int);";
 
@@ -33,7 +33,8 @@ namespace QuoteLibrary.Infrastructure.Repositories
                     @pnName = author.Name,
                     @pdBirthDate = author.BirthDate,
                     @pnIdNationality = author.IdNationality,
-                    @psPhotoUrl = author.PhotoUrl
+                    @psPhotoUrl = author.PhotoUrl,
+                    @pnUserId = author.UserId
                 }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
                 return id;
             }

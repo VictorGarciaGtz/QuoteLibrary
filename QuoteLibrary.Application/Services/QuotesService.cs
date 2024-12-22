@@ -13,21 +13,25 @@ namespace QuoteLibrary.Application.Services
     public class QuotesService : IQuotesService
     {
         private readonly IQuotesRepository _quotesRepository;
+        private readonly ITokenService _tokenService;
 
-        public QuotesService(IQuotesRepository quotesRepository)
+        public QuotesService(IQuotesRepository quotesRepository, ITokenService tokenService)
         {
             _quotesRepository = quotesRepository;
+            _tokenService = tokenService;
         }
 
         public async Task<int> CreateQuotesAsync(QuotesDto quoteDto)
         {
+            var userId = _tokenService.GetUserId();
             var quote = new Quotes
             {
                 Text = quoteDto.Text,
                 AuthorId = quoteDto.AuthorId,
                 TypeId = quoteDto.TypeId,
                 CreationDate = DateTime.Now,
-                ModificationDate = null
+                ModificationDate = null,
+                UserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId)
             };
             return await _quotesRepository.CreateQuotesAsync(quote);
         }
