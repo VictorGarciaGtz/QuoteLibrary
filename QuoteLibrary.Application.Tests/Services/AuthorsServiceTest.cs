@@ -1,5 +1,6 @@
 ﻿using Moq;
 using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
 using QuoteLibrary.Domain.Entities;
 using QuoteLibrary.Domain.Interfaces;
@@ -16,11 +17,13 @@ namespace QuoteLibrary.Application.Tests.Services
         private readonly AuthorsService _authorsService;
 
         private readonly Mock<IAuthorsRepository> _mockAuthorsRepository;
+        private readonly Mock<ITokenService> _mockTokenService;
 
         public AuthorsServiceTest()
         {
             _mockAuthorsRepository = new Mock<IAuthorsRepository>();
-            _authorsService = new AuthorsService( _mockAuthorsRepository.Object);
+            _mockTokenService = new Mock<ITokenService>();
+            _authorsService = new AuthorsService( _mockAuthorsRepository.Object, _mockTokenService.Object);
         }
 
         [Fact]

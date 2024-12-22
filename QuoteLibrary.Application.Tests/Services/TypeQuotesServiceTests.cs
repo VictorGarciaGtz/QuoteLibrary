@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
 using QuoteLibrary.Domain.Entities;
 using QuoteLibrary.Domain.Interfaces;
@@ -16,11 +17,13 @@ namespace QuoteLibrary.Application.Tests.Services
         private readonly TypesQuotesService _typeQuotesService;
 
         private readonly Mock<ITypesQuotesRepository> _mockTypeQuotesRepository;
+        private readonly Mock<ITokenService> _mockTokenService;
 
         public TypeQuotesServiceTests()
         {
             _mockTypeQuotesRepository = new Mock<ITypesQuotesRepository>();
-            _typeQuotesService = new TypesQuotesService(_mockTypeQuotesRepository.Object);
+            _mockTokenService = new Mock<ITokenService>();
+            _typeQuotesService = new TypesQuotesService(_mockTypeQuotesRepository.Object, _mockTokenService.Object);
         }
 
         [Fact]
