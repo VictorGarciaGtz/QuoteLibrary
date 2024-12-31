@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QuoteLibrary.Application.Interfaces;
-using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.TypesQuotes;
 using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,14 +20,14 @@ namespace QuoteLibrary.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TypesQuotesDto>>> GetAllTypesQuotes()
+        public async Task<ActionResult<IEnumerable<GetTypesQuotesDto>>> GetAllTypesQuotes()
         {
             var types = await _typesQuotesService.GetAllTypesQuotesAsync();
             return Ok(types);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TypesQuotesDto>> GetTypesQuotesById(int id)
+        public async Task<ActionResult<TypesQuotesDetailsDto>> GetTypesQuotesById(int id)
         {
             var typeDto = await _typesQuotesService.GetTypesQuotesByIdAsync(id);
             if (typeDto == null)
@@ -39,7 +39,7 @@ namespace QuoteLibrary.API.Controllers
 
         // POST: api/Types
         [HttpPost]
-        public async Task<ActionResult<TypesQuotesDto>> CreateType([FromBody] TypesQuotesDto typesQuotesDto)
+        public async Task<ActionResult<CreateTypesQuotesDto>> CreateType([FromBody] CreateTypesQuotesDto typesQuotesDto)
         {
             if (string.IsNullOrWhiteSpace(typesQuotesDto.Name))
             {
@@ -54,14 +54,14 @@ namespace QuoteLibrary.API.Controllers
 
         // PUT: api/Types/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateType(int id, [FromBody] TypesQuotesDto typesQuotesDto)
+        public async Task<IActionResult> UpdateType(int id, [FromBody] UpdateTypesQuotesDto typesQuotesDto)
         {
             if (string.IsNullOrWhiteSpace(typesQuotesDto.Name))
             {
                 return BadRequest("Name is required.");
             }
 
-            var result = await _typesQuotesService.UpdateTypesQuotesAsync(id, typesQuotesDto.Name);
+            var result = await _typesQuotesService.UpdateTypesQuotesAsync(id == 0 ? typesQuotesDto.Id : id, typesQuotesDto.Name);
             if (!result)
             {
                 return NotFound();

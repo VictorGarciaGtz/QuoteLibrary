@@ -1,5 +1,5 @@
 ﻿using QuoteLibrary.Application.Interfaces;
-using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.TypesQuotes;
 using QuoteLibrary.Domain.Entities;
 using QuoteLibrary.Domain.Interfaces;
 
@@ -16,23 +16,22 @@ namespace QuoteLibrary.Application.Services
             _tokenService = tokenService;
         }
 
-        public async Task<IEnumerable<TypesQuotesDto>> GetAllTypesQuotesAsync()
+        public async Task<IEnumerable<GetTypesQuotesDto>> GetAllTypesQuotesAsync()
         {
             var typesQuotes = await _typeRepository.GetAllTypesQuotesAsync();
 
-            return typesQuotes.Select(t => new TypesQuotesDto { 
+            return typesQuotes.Select(t => new GetTypesQuotesDto { 
                 Id = t.Id, 
-                Name = t.Name,
-                CreationDate = t.CreationDate,
-                ModificationDate = t.ModificationDate
+                Name = t.Name
             });
         }
 
-        public async Task<TypesQuotesDto?> GetTypesQuotesByIdAsync(int id)
+        public async Task<TypesQuotesDetailsDto?> GetTypesQuotesByIdAsync(int id)
         {
             var typesQuotes = await _typeRepository.GetTypesQuotesByIdAsync(id);
 
-            return typesQuotes == null ? null : new TypesQuotesDto { 
+            return typesQuotes == null ? null : new TypesQuotesDetailsDto
+            { 
                 Id = typesQuotes.Id, 
                 Name = typesQuotes.Name, 
                 CreationDate = typesQuotes.CreationDate, 
@@ -59,7 +58,10 @@ namespace QuoteLibrary.Application.Services
                 return false;
             }
 
+            var userId = _tokenService.GetUserId();
+
             existingType.Name = name;
+            existingType.UserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId);
             return await _typeRepository.UpdateTypesQuotesAsync(existingType);
         }
 

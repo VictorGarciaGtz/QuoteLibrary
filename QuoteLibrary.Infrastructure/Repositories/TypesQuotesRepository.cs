@@ -81,12 +81,15 @@ namespace QuoteLibrary.Infrastructure.Repositories
                 string sql = @"
                     UPDATE TypesQuotes
                     SET Name = @pnName,
-                        ModificationDate = GETDATE()
-                    WHERE Id = @Id;";
+                        ModificationDate = GETDATE(),
+                        UserId = @pnUserId
+                    WHERE Id = @pnId;";
 
                 var rowsAffected = await connection.ExecuteAsync(sql, new
                 {
                     @pnName = type.Name,
+                    @pnId = type.Id,
+                    @pnUserId = type.UserId
                 }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
                 return rowsAffected > 0;
             }
