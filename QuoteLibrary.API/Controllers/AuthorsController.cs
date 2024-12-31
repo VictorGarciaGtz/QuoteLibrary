@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.Author;
 using QuoteLibrary.Application.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,14 +20,14 @@ namespace QuoteLibrary.API.Controllers
 
         // GET: api/<AuthorsController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AuthorsDto>>> Get()
+        public async Task<ActionResult<IEnumerable<GetAuthorDto>>> Get()
         {
             return Ok(await _authorsService.GetAllAuthorsAsync());
         }
 
         // GET api/<AuthorsController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<AuthorsDto>> Get(int id)
+        public async Task<ActionResult<AuthorDetailsDto>> Get(int id)
         {
             var author = await _authorsService.GetAuthorsByIdAsync(id);
             if(author == null)
@@ -40,7 +40,7 @@ namespace QuoteLibrary.API.Controllers
 
         // POST api/<AuthorsController>
         [HttpPost]
-        public async Task<ActionResult<AuthorsDto>> CreateAuthor([FromBody] AuthorsDto authorDto)
+        public async Task<ActionResult<AuthorDetailsDto>> CreateAuthor([FromBody] CreateAuthorDto authorDto)
         {
             if (string.IsNullOrEmpty(authorDto.Name))
             {
@@ -55,7 +55,7 @@ namespace QuoteLibrary.API.Controllers
 
         // PUT api/<AuthorsController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAuthor(int id, [FromBody] AuthorsDto authorDto)
+        public async Task<IActionResult> UpdateAuthor(int id, [FromBody] UpdateAuthorDto authorDto)
         {
             if (string.IsNullOrEmpty(authorDto.Name))
             {

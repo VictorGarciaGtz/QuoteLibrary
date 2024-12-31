@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Author\" />
     <Folder Include="DTOs\Quote\" />
   </ItemGroup>
 

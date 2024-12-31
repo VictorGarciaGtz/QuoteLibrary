@@ -93,7 +93,8 @@ namespace QuoteLibrary.Infrastructure.Repositories
                         BirthDate = @pdBirthDate,
                         IdNationality = @pnIdNationality,
                         PhotoUrl = @psPhotoUrl,                       
-                        ModificationDate = GETDATE()
+                        ModificationDate = GETDATE(),
+                        UserId = @pnUserId
                     WHERE Id = @pnId;";
 
                 var rowsAffected = await connection.ExecuteAsync(sql, new
@@ -103,6 +104,7 @@ namespace QuoteLibrary.Infrastructure.Repositories
                     @pnIdNationality = author.IdNationality,
                     @psPhotoUrl = author.PhotoUrl,
                     @pnId = author.Id,
+                    @pnUserId = author.UserId,
                 }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
                 return rowsAffected > 0;
             }

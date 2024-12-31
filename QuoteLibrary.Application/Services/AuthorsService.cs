@@ -1,4 +1,4 @@
-﻿using QuoteLibrary.Application.DTOs;
+﻿using QuoteLibrary.Application.DTOs.Author;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Domain.Entities;
 using QuoteLibrary.Domain.Interfaces;
@@ -16,7 +16,7 @@ namespace QuoteLibrary.Application.Services
             _tokenService = tokenService;
         }
 
-        public async Task<int> CreateAuthorsAsync(AuthorsDto authorDto)
+        public async Task<int> CreateAuthorsAsync(CreateAuthorDto authorDto)
         {
             var userId = _tokenService.GetUserId();
             var author = new Authors
@@ -38,46 +38,47 @@ namespace QuoteLibrary.Application.Services
             return await _authorsRepository.DeleteAuthorsAsync(id);
         }
 
-        public async Task<IEnumerable<AuthorsDto>> GetAllAuthorsAsync()
+        public async Task<IEnumerable<GetAuthorDto>> GetAllAuthorsAsync()
         {
             var authors = await _authorsRepository.GetAllAuthorsAsync();
 
-            return authors.Select(x => new AuthorsDto { 
-                Id = x.Id,
+            return authors.Select(x => new GetAuthorDto { 
+                Id = x.Id ?? 0,
                 Name = x.Name, 
                 BirthDate = x.BirthDate, 
                 IdNationality = x.IdNationality, 
-                PhotoUrl = x.PhotoUrl, 
-                CreationDate = x.CreationDate,
-                ModificationDate = x.ModificationDate
+                PhotoUrl = x.PhotoUrl
             });
         }
 
-        public async Task<AuthorsDto?> GetAuthorsByIdAsync(int id)
+        public async Task<AuthorDetailsDto?> GetAuthorsByIdAsync(int id)
         {
             var author = await _authorsRepository.GetAuthorsByIdAsync(id);
-            return author == null ? null : new AuthorsDto { 
-                Id = author.Id,
+            return author == null ? null : new AuthorDetailsDto { 
+                Id = author.Id ?? 0,
                 Name = author.Name, 
                 BirthDate = author.BirthDate, 
                 CreationDate = author.CreationDate, 
                 ModificationDate = author.ModificationDate,
-                IdNationality = author.IdNationality
+                IdNationality = author.IdNationality,
+                PhotoUrl = author.PhotoUrl
             };
         }
 
-        public async Task<bool> UpdateAuthorsAsync(int id, AuthorsDto authorDto)
+        public async Task<bool> UpdateAuthorsAsync(int id, UpdateAuthorDto authorDto)
         {
-            var author = await _authorsRepository.GetAuthorsByIdAsync(authorDto.Id ?? 0);
+            var author = await _authorsRepository.GetAuthorsByIdAsync(id == 0 ? authorDto.Id : id);
             if (author == null)
             {
                 return false;
             }
+            var userId = _tokenService.GetUserId();
+
             author.Name = authorDto.Name;
             author.BirthDate = authorDto.BirthDate;
             author.CreationDate = DateTime.Now;
             author.PhotoUrl = authorDto.PhotoUrl;
-            author.ModificationDate = authorDto.ModificationDate;
+            author.UserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId);
 
             return await _authorsRepository.UpdateAuthorsAsync(author);
 
