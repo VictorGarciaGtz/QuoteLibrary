@@ -10,8 +10,4 @@
     <ProjectReference Include="..\QuoteLibrary.Infrastructure\QuoteLibrary.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\Quote\" />
-  </ItemGroup>
-
 </Project>

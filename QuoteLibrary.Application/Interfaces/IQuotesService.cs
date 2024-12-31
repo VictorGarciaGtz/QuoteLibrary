@@ -1,4 +1,4 @@
-﻿using QuoteLibrary.Application.DTOs;
+﻿using QuoteLibrary.Application.DTOs.Quote;
 using QuoteLibrary.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,10 @@ namespace QuoteLibrary.Application.Interfaces
 {
     public interface IQuotesService
     {
-        Task<IEnumerable<QuotesDto>> GetAllQuotesAsync();
-        Task<QuotesDto?> GetQuotesByIdAsync(int id);
-        Task<int> CreateQuotesAsync(QuotesDto quoteDto);
-        Task<bool> UpdateQuotesAsync(int id, QuotesDto quoteDto);
+        Task<IEnumerable<GetQuoteDto>> GetAllQuotesAsync();
+        Task<QuoteDetailsDto?> GetQuotesByIdAsync(int id);
+        Task<int> CreateQuotesAsync(CreateQuoteDto quoteDto);
+        Task<bool> UpdateQuotesAsync(int id, UpdateQuoteDto quoteDto);
         Task<bool> DeleteQuotesAsync(int id);
     }
 }

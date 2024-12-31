@@ -1,7 +1,9 @@
 ﻿using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.Quote;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Domain.Entities;
 using QuoteLibrary.Domain.Interfaces;
+using QuoteLibrary.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +23,7 @@ namespace QuoteLibrary.Application.Services
             _tokenService = tokenService;
         }
 
-        public async Task<int> CreateQuotesAsync(QuotesDto quoteDto)
+        public async Task<int> CreateQuotesAsync(CreateQuoteDto quoteDto)
         {
             var userId = _tokenService.GetUserId();
             var quote = new Quotes
@@ -41,26 +43,24 @@ namespace QuoteLibrary.Application.Services
             return await _quotesRepository.DeleteQuotesAsync(id);
         }
 
-        public async Task<IEnumerable<QuotesDto>> GetAllQuotesAsync()
+        public async Task<IEnumerable<GetQuoteDto>> GetAllQuotesAsync()
         {
             var quotes = await _quotesRepository.GetAllQuotesAsync();
 
-            return quotes.Select(x => new QuotesDto {
-                Id = x.Id,
+            return quotes.Select(x => new GetQuoteDto {
+                Id = x.Id ?? 0,
                 Text = x.Text, 
                 AuthorId = x.AuthorId, 
-                TypeId = x.TypeId, 
-                CreationDate = x.CreationDate, 
-                ModificationDate = x.ModificationDate 
+                TypeId = x.TypeId
             });
         }
 
-        public async Task<QuotesDto?> GetQuotesByIdAsync(int id)
+        public async Task<QuoteDetailsDto?> GetQuotesByIdAsync(int id)
         {
             var quote = await _quotesRepository.GetQuotesByIdAsync(id);
-            return quote == null ? null : new QuotesDto
+            return quote == null ? null : new QuoteDetailsDto
             {
-                Id = quote.Id,
+                Id = quote.Id ?? 0,
                 Text = quote.Text,
                 AuthorId = quote.AuthorId,
                 TypeId = quote.TypeId,
@@ -69,16 +69,20 @@ namespace QuoteLibrary.Application.Services
             };
         }
 
-        public async Task<bool> UpdateQuotesAsync(int id, QuotesDto quoteDto)
+        public async Task<bool> UpdateQuotesAsync(int id, UpdateQuoteDto quoteDto)
         {
-            var quote = new Quotes
+            var quote = await _quotesRepository.GetQuotesByIdAsync(id == 0 ? quoteDto.Id : id);
+            if (quote == null)
             {
-                Text = quoteDto.Text,
-                AuthorId = quoteDto.AuthorId,
-                TypeId = quoteDto.TypeId,
-                CreationDate = DateTime.Now,
-                ModificationDate = null
-            };
+                return false;
+            }
+            var userId = _tokenService.GetUserId();
+
+            quote.Text = quoteDto.Text;
+            quote.AuthorId = quoteDto.AuthorId;
+            quote.TypeId = quote.TypeId;
+            quote.UserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId);
+
             return await _quotesRepository.UpdateQuotesAsync(quote);
         }
     }

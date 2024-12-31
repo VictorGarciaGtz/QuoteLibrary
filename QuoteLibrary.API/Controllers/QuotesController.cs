@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.Quote;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
 
@@ -21,7 +21,7 @@ namespace QuoteLibrary.API.Controllers
         // GET: api/<QuoteLibraryController>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<QuotesDto>>> GetAllQuotes()
+        public async Task<ActionResult<IEnumerable<GetQuoteDto>>> GetAllQuotes()
         {
             return Ok(await _quotesService.GetAllQuotesAsync());
         }
@@ -29,7 +29,7 @@ namespace QuoteLibrary.API.Controllers
         // GET api/<QuoteLibraryController>/5
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<QuotesDto>> GetById(int id)
+        public async Task<ActionResult<QuoteDetailsDto>> GetById(int id)
         {
             var quoteDto = await _quotesService.GetQuotesByIdAsync(id);
 
@@ -44,7 +44,7 @@ namespace QuoteLibrary.API.Controllers
         // POST api/<QuoteLibraryController>
         [HttpPost]
         [Authorize(Roles = "Admin, User")]
-        public async Task<IActionResult> Post([FromBody] QuotesDto quotesDto)
+        public async Task<IActionResult> Post([FromBody] CreateQuoteDto quotesDto)
         {
             var id = await _quotesService.CreateQuotesAsync(quotesDto);
             var quote = await _quotesService.GetQuotesByIdAsync(id);
@@ -55,7 +55,7 @@ namespace QuoteLibrary.API.Controllers
         // PUT api/<QuoteLibraryController>/5
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin, User")]
-        public async Task<IActionResult> Put(int id, [FromBody] QuotesDto quotesDto)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateQuoteDto quotesDto)
         {
             var result = await _quotesService.UpdateQuotesAsync(id, quotesDto);
             if (!result)

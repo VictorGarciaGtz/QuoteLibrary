@@ -108,14 +108,17 @@ namespace QuoteLibrary.Infrastructure.Repositories
                     SET Text = @psText,
 	                    AuthorId = @pnAuthorId,
 	                    TypeId = @pnTypeId,
-	                    ModificationDate = GETDATE()
+	                    ModificationDate = GETDATE(),
+                        UserId = @pnUserId
                     WHERE Id = @pnId;";
 
                 var rowsAffected = await connection.ExecuteAsync(sql, new
                 {
                     @psText = quote.Text,
                     @pnAuthorId = quote.AuthorId,
-                    @pnTypeId = quote.TypeId
+                    @pnTypeId = quote.TypeId,
+                    @pnUserId = quote.UserId,
+                    @pnId = quote.Id
                 }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
                 return rowsAffected > 0;
             }
