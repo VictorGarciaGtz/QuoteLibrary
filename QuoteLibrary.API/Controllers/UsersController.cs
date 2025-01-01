@@ -24,9 +24,7 @@ namespace QuoteLibrary.API.Controllers
         {
             var id = await _usersService.CreateUserAsync(usersDto);
 
-            var userDto = _usersService.GetUsersByIdAsync(id);
-
-            return CreatedAtAction(nameof(GetUserById), new { id = userDto.Id }, userDto);
+            return Ok();
         }
 
         [HttpPost("validate")]
