@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.User;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
 
@@ -20,7 +20,7 @@ namespace QuoteLibrary.API.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateUser([FromBody] UsersInsertDto usersDto)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserDto usersDto)
         {
             var id = await _usersService.CreateUserAsync(usersDto);
 
@@ -29,7 +29,7 @@ namespace QuoteLibrary.API.Controllers
 
         [HttpPost("validate")]
         [AllowAnonymous]
-        public async Task<ActionResult<bool>> ExistUserWithUsernameOrEmail([FromBody] UsersInsertDto usersDto)
+        public async Task<ActionResult<bool>> ExistUserWithUsernameOrEmail([FromBody] CreateUserDto usersDto)
         {
             var existUser = await _usersService.ExistUserWithUsernameOrEmail(usersDto);
 
@@ -40,7 +40,7 @@ namespace QuoteLibrary.API.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UsersDto>>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<GetUserDto>>> GetAllUsers()
         {
             var users = await _usersService.GetAllUsersAsync();
 
@@ -49,7 +49,7 @@ namespace QuoteLibrary.API.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin, User")]
-        public async Task<ActionResult<UsersDto>> GetUserById(int id)
+        public async Task<ActionResult<UserDetailsDto>> GetUserById(int id)
         {
             var userDto = await _usersService.GetUsersByIdAsync(id);
 
@@ -60,7 +60,7 @@ namespace QuoteLibrary.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin, User")]
-        public async Task<IActionResult> UpdateUser([FromBody] UsersUpdateDto usersUpdateDto, int id)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto usersUpdateDto, int id)
         {
             var result = await _usersService.UpdateUsersAsync(id, usersUpdateDto);
             if (!result)

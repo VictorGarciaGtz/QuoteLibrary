@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.User;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Domain.Entities;
 using QuoteLibrary.Domain.Interfaces;
@@ -18,7 +18,7 @@ namespace QuoteLibrary.Application.Services
             _tokenService = tokenService;
         }
 
-        public async Task<int> CreateUserAsync(UsersInsertDto usersDto)
+        public async Task<int> CreateUserAsync(CreateUserDto usersDto)
         {
             var existUser = await _usersRepository.ExistUserWithUsernameOrEmail(usersDto.Username, usersDto.Email);
 
@@ -27,7 +27,6 @@ namespace QuoteLibrary.Application.Services
             var user = new Users
             {
                 PasswordHash = usersDto.PasswordHash,
-                Id = usersDto.Id,
                 RoleName = "User",
                 CreationDate = DateTime.Now,
                 ModificationDate = DateTime.Now,
@@ -46,26 +45,24 @@ namespace QuoteLibrary.Application.Services
             return await _usersRepository.DeleteUsersAsync(id);
         }
 
-        public async Task<bool> ExistUserWithUsernameOrEmail(UsersInsertDto usersDto)
+        public async Task<bool> ExistUserWithUsernameOrEmail(CreateUserDto usersDto)
         {
             return await _usersRepository.ExistUserWithUsernameOrEmail(usersDto.Username, usersDto.Email);
         }
 
-        public async Task<IEnumerable<UsersDto>> GetAllUsersAsync()
+        public async Task<IEnumerable<GetUserDto>> GetAllUsersAsync()
         {
             var users = await _usersRepository.GetAllUsersAsync();
            
-            return users != null ? users.Select(x => new UsersDto() { 
+            return users != null ? users.Select(x => new GetUserDto() { 
                 Id = x.Id, 
-                CreationDate = x.CreationDate, 
                 Email = x.Email, 
-                ModificationDate = x.ModificationDate, 
                 RoleName = x.RoleName,
                 Username = x.Username
-            }).ToList() : Enumerable.Empty<UsersDto>();
+            }).ToList() : Enumerable.Empty<GetUserDto>();
         }
 
-        public async Task<UsersDto?> GetUsersByIdAsync(int id)
+        public async Task<UserDetailsDto?> GetUsersByIdAsync(int id)
         {
             if (!IsValidClaimsUserByRole(id))
                 throw new Exception(string.Format("This user is not authorized to perform this action to the element with Id {0}.", id));
@@ -74,7 +71,7 @@ namespace QuoteLibrary.Application.Services
 
             if (user == null) return null;
 
-            var userDto = new UsersDto()
+            var userDto = new UserDetailsDto()
             {
                 Id = user.Id,
                 Username = user.Username,
@@ -86,7 +83,7 @@ namespace QuoteLibrary.Application.Services
             return userDto;
         }
 
-        public async Task<bool> UpdateUsersAsync(int id, UsersUpdateDto userDto)
+        public async Task<bool> UpdateUsersAsync(int id, UpdateUserDto userDto)
         {
             if (!IsValidClaimsUserByRole(id))
                 throw new Exception(string.Format("This user is not authorized to perform this action to the element with Id {0}.", id));
@@ -101,7 +98,7 @@ namespace QuoteLibrary.Application.Services
 
             var user = new Users()
             {
-                Id = userDto.Id,
+                Id = 0,
                 Username = userDto.Username,
                 Email = userDto.Email,
                 PasswordHash = userDto.PasswordHash,

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.Auth;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Domain.Interfaces;
 using QuoteLibrary.Infrastructure.Authentication;
