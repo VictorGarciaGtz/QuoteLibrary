@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
-using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.TypesQuotes;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
 using QuoteLibrary.Domain.Entities;
@@ -46,7 +46,7 @@ namespace QuoteLibrary.Application.Tests.Services
 
             //Assert
             Assert.NotNull(result);
-            Assert.True(result.GetType() == typeof(TypesQuotesDto));
+            Assert.True(result.GetType() == typeof(TypesQuotesDetailsDto));
             Assert.Equal("Pelicula", result.Name);
             Assert.Equal(new DateTime(2024, 10, 3), result.CreationDate);
 

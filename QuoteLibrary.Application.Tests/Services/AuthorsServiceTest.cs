@@ -1,5 +1,5 @@
 ﻿using Moq;
-using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.Author;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
 using QuoteLibrary.Domain.Entities;
@@ -76,12 +76,10 @@ namespace QuoteLibrary.Application.Tests.Services
         {
             //Arrange 
             var authorId = 1;
-            var authorDto = new AuthorsDto()
+            var authorDto = new CreateAuthorDto()
             {
-                Id = 0,
                 Name = "Gorge RR. Martin",
                 BirthDate = new DateTime(1948, 9, 20),
-                CreationDate = DateTime.Now,
                 IdNationality = 2
             };
 
@@ -109,12 +107,11 @@ namespace QuoteLibrary.Application.Tests.Services
                 IdNationality = 1
             };
 
-            var authorDtoUpdate = new AuthorsDto
+            var authorDtoUpdate = new UpdateAuthorDto
             {
                 Id = 1,
                 Name = "Guillermo del Toro Gómez",
                 BirthDate = new DateTime(1964, 10, 9),
-                CreationDate = DateTime.Now,
                 IdNationality = 1
             };
 

@@ -1,5 +1,5 @@
 ﻿using Moq;
-using QuoteLibrary.Application.DTOs;
+using QuoteLibrary.Application.DTOs.Quote;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
 using QuoteLibrary.Domain.Entities;
@@ -75,13 +75,11 @@ namespace QuoteLibrary.Application.Tests.Services
         public async Task CreateQuotesAsync_ReturnNewId()
         {
             //Arrange
-            var quotesDto = new QuotesDto
+            var quotesDto = new CreateQuoteDto
             {
-                Id = 0,
                 Text = "Piensa 2 veces programa 1.",
                 AuthorId = 1,
                 TypeId = 1,
-                CreationDate = DateTime.Now
             };
 
             _mockQuotesRepository.Setup(repo => repo.CreateQuotesAsync(It.IsAny<Quotes>())).ReturnsAsync(1);
@@ -107,13 +105,12 @@ namespace QuoteLibrary.Application.Tests.Services
                 CreationDate = DateTime.Now
             };
 
-            var quotesDto = new QuotesDto
+            var quotesDto = new UpdateQuoteDto
             {
                 Id = 1,
                 Text = "KISS",
                 AuthorId = 1,
                 TypeId = 1,
-                CreationDate = DateTime.Now
             };
 
             _mockQuotesRepository.Setup(repo => repo.GetQuotesByIdAsync(quotesId)).ReturnsAsync(quotes);
