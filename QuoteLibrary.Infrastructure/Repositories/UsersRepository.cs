@@ -59,6 +59,44 @@ namespace QuoteLibrary.Infrastructure.Repositories
             }
         }
 
+        public async Task<bool> ExistsOtherUserWithSameEmail(int id, string email)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                string sql = @"SELECT Id, Username, PasswordHash, RoleName, CreationDate, ModificationDate 
+                            FROM Users 
+                            WHERE Email = @psEmail
+                            AND Id != @pnId";
+
+                var user = await connection.QuerySingleOrDefaultAsync<Users>(sql, new
+                {
+                    @psEmail = email,
+                    @pnId = id
+                }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
+
+                return user != null;
+            }
+        }
+
+        public async Task<bool> ExistsOtherUserWithSameUsername(int id, string username)
+        {
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                string sql = @"SELECT Id, Username, PasswordHash, RoleName, CreationDate, ModificationDate 
+                            FROM Users 
+                            WHERE Email = @psUsername
+                            AND Id != @pnId";
+
+                var user = await connection.QuerySingleOrDefaultAsync<Users>(sql, new
+                {
+                    @psUsername = username,
+                    @pnId = id
+                }, commandType: System.Data.CommandType.Text, commandTimeout: 0);
+
+                return user != null;
+            }
+        }
+
         public async Task<bool> ExistUserWithUsernameOrEmail(string username, string email)
         {
             using (var connection = _connectionFactory.CreateConnection())

@@ -17,5 +17,9 @@ namespace QuoteLibrary.Domain.Interfaces
         Task<int> CreateUsersAsync(Users user);
         Task<bool> UpdateUsersAsync(Users user);
         Task<bool> DeleteUsersAsync(int id);
+
+        Task<bool> ExistsOtherUserWithSameEmail(int id, string email);
+
+        Task<bool> ExistsOtherUserWithSameUsername(int id, string username);
     }
 }

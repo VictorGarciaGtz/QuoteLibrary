@@ -88,13 +88,25 @@ namespace QuoteLibrary.Application.Services
             if (!IsValidClaimsUserByRole(id))
                 throw new Exception(string.Format("This user is not authorized to perform this action to the element with Id {0}.", id));
 
-            var existUser = _usersRepository.GetUsersByIdAsync(id);
+            var existUser = await _usersRepository.GetUsersByIdAsync(id);
 
             if(existUser == null) return false;
 
-            var existUserWithUsernameOrEmail = await _usersRepository.ExistUserWithUsernameOrEmail(userDto.Username, userDto.Email);
-
-            if (existUserWithUsernameOrEmail) { return false; }
+            if(!(existUser.Email == userDto.Email && existUser.Username == userDto.Username)) {
+                if (existUser.Username == userDto.Username)
+                {
+                    var existUserWithSameEmail = await _usersRepository.ExistsOtherUserWithSameEmail(id, userDto.Email);
+                    if (existUserWithSameEmail) { return false; }
+                } else if(existUser.Email == userDto.Email)
+                {
+                    var existUserWithSameUsername = await _usersRepository.ExistsOtherUserWithSameUsername(id, userDto.Username);
+                    if (existUserWithSameUsername) { return false; }
+                } else
+                {
+                    var existsUserWithUsernameOrEmail = await _usersRepository.ExistUserWithUsernameOrEmail(userDto.Username, userDto.Email);
+                    if (existsUserWithUsernameOrEmail) { return false; }
+                }
+            }
 
             var user = new Users()
             {
@@ -121,10 +133,12 @@ namespace QuoteLibrary.Application.Services
 
             var userRole = _tokenService.GetUserRole();
 
-            if (userRole == "User" & id != userId)
-                return false;
+            if(userRole == "Admin")
+                return true;
+            else if (userRole == "User" && id == userId)
+                return true;
 
-            return true;
+            return false;
         }
     }  
 }
