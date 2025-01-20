@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Threading.RateLimiting;
 using QuoteLibrary.API.Middlewares;
 using QuoteLibrary.Application.Interfaces;
 using QuoteLibrary.Application.Services;
@@ -27,8 +27,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
+}).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -39,6 +38,32 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtIssuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!))
     };
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        await context.HttpContext.Response.WriteAsync(
+            "Too many login attempts. Please try again later.", token);
+    };
+
+    options.AddPolicy("LoginLimiter", httpContext =>
+    {
+        // Extrae la dirección IP desde el HttpContext
+        var clientIp = httpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+        // Partición basada en la IP del cliente
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: clientIp,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5, // Máximo de 5 intentos
+                Window = TimeSpan.FromMinutes(1), // En una ventana de 1 minuto
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0 // Permitir máximo 2 solicitudes en cola
+            });
+    });
 });
 
 builder.Services.AddAuthorization();
@@ -84,6 +109,7 @@ app.UseMiddleware<ApiVersioningMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
