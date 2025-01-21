@@ -106,6 +106,7 @@ var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseMiddleware<ApiVersioningMiddleware>();
+app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
