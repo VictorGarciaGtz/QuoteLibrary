@@ -1,0 +1,17 @@
+﻿@page
+@using QuoteLibrary.API.Pages
+@model IndexModel
+@{
+    ViewData["Title"] = "QuoteLibrary API";
+}
+
+<h1>🚀 QuoteLibrary API</h1>
+<p>Tu API para frases célebres está ejecutándose correctamente.</p>
+<p><strong>Versión:</strong> 1.0.0</p>
+<p><strong>Hora del servidor:</strong> @DateTime.UtcNow.ToString("u")</p>
+
+<ul>
+    <li><a href="/swagger">Ver documentación Swagger</a></li>
+    <li><a href="/api/quotes">Consultar frases</a></li>
+    <li><a href="/api/auth/login">Iniciar sesión</a></li>
+</ul>

@@ -1,0 +1,43 @@
+﻿/* Archivo de estilos para la interfaz de la API */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #20232a;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #282c34;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+h1 {
+    color: #61dafb;
+    margin-bottom: 1rem;
+}
+
+p, li {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+a {
+    color: #90cdf4;
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+.footer {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: #888;
+}
