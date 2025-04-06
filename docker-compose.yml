@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # Servicio para la aplicación ASP.NET Core
+  web:
+    container_name: webapi-container
+    image: quotelibrary-api:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - sqlserverdb
+    networks:
+      - app-network
+
+  # Servicio para SQL Server
+  sqlserverdb:
+    container_name: sqlserver-container
+    image: mcr.microsoft.com/mssql/server:2019-CU31-ubuntu-20.04
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=376104!43543@v
+    ports:
+      - "1433:1433"
+    volumes:
+      - .\Scripts\:/docker-entrypoint-initdb.d/
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

@@ -2,6 +2,9 @@
 -- **************************************************************************************
 -- Nationalities
 -- **************************************************************************************
+USE QuoteLibrary;
+GO
+
 IF NOT EXISTS (SELECT 1 FROM Nationalities WHERE Name = 'American')
 BEGIN
     INSERT INTO Nationalities (Name) VALUES ('American');

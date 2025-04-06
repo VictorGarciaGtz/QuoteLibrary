@@ -1,13 +1,12 @@
 -- Create the QuoteLibrary database if it does not exist
-IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = N'QuoteLibrary')
-BEGIN
-    CREATE DATABASE QuoteLibrary;
-END
 
-WAITFOR DELAY '00:00:02';
+CREATE DATABASE QuoteLibrary;
+GO
+
 
 -- Switch to the QuoteLibrary database
 USE QuoteLibrary;
+GO
 
 -- Create the Types table
 IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'TypesQuotes') AND type in (N'U'))
@@ -21,6 +20,7 @@ BEGIN
         CONSTRAINT PK_Types PRIMARY KEY (Id) -- Primary key constraint with name
     );
 END
+GO
 
 -- Create the Authors table
 IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'Authors') AND type in (N'U'))
@@ -37,6 +37,7 @@ BEGIN
         CONSTRAINT PK_Authors PRIMARY KEY (Id) -- Primary key constraint with name
     );
 END
+GO
 
 -- Create the Quotes table
 IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'Quotes') AND type in (N'U'))
@@ -52,21 +53,23 @@ BEGIN
         CONSTRAINT PK_Quotes PRIMARY KEY (Id) -- Primary key constraint with name
     );
 END
+GO
 
 IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'Users') AND type in (N'U'))
 BEGIN
     CREATE TABLE Users (
         Id INT IDENTITY(1,1),
-        Username NVARCHAR(150) NOT NULL UNIQUE,    -- Nombre de usuario único
-        PasswordHash NVARCHAR(1000) NOT NULL,       -- Hash de la contraseña
+        Username NVARCHAR(150) NOT NULL UNIQUE,    -- Nombre de usuario ï¿½nico
+        PasswordHash NVARCHAR(1000) NOT NULL,       -- Hash de la contraseï¿½a
         RoleName NVARCHAR(50) NOT NULL,                -- Rol del usuario (Admin, User, etc.)
-        CreationDate DATETIME NOT NULL DEFAULT GETDATE(), -- Fecha de creación
-        ModificationDate DATETIME NULL, -- Fecha de última actualización
+        CreationDate DATETIME NOT NULL DEFAULT GETDATE(), -- Fecha de creaciï¿½n
+        ModificationDate DATETIME NULL, -- Fecha de ï¿½ltima actualizaciï¿½n
 		Email NVARCHAR(200) NOT NULL UNIQUE,
 		Active BIT DEFAULT 1 NULL,
 		CONSTRAINT PK_Users PRIMARY KEY (Id) -- Primary key constraint
     );
 END
+GO
 
 -- Create the Nationalities table
 IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'Nationalities') AND type in (N'U'))
@@ -77,6 +80,7 @@ BEGIN
         CONSTRAINT PK_Nationalities PRIMARY KEY (Id) -- Primary key constraint
     );
 END
+GO
 
 -- Add foreign key constraint for AuthorId in the Quotes table referencing the Authors table
 IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'FK_Quotes_Authors') AND parent_object_id = OBJECT_ID(N'Quotes'))
